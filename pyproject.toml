@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fastapi-rfc3230-digest-header-middleware"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.121.3",
+    "rfc3230-digest-headers>=1.0.5",
+]
+authors = [{ name = "Marian Plivelic", email = "marianplivelic@gmail.com" }]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Framework :: FastAPI",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+]
+keywords = ["fastapi", "middleware", "rfc3230", "digest-header"]
+
+[dependency-groups]
+dev = ["pytest>=9.0.1", "ruff>=0.14.5"]
