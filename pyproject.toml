@@ -5,15 +5,13 @@ build-backend = "hatchling.build"
 [project]
 name = "fastapi-rfc3230-digest-header-middleware"
 version = "0.1.0"
-description = "Add your description here"
+description = "Implements a middleware that protects FastAPI endpoints with RFC 3230 Digest headers."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = [
-    "fastapi>=0.121.3",
-    "rfc3230-digest-headers>=1.0.5",
-]
+dependencies = ["fastapi>=0.121.3", "rfc3230-digest-headers>=1.0.5"]
 authors = [{ name = "Marian Plivelic", email = "marianplivelic@gmail.com" }]
 classifiers = [
+    "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
