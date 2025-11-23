@@ -1,11 +1,10 @@
 """Module that implements a middleware for FastAPI to handle RFC 3230 Digest headers."""
 
 from typing import Callable, MutableMapping, Any, Awaitable
-from rfc3230_digest_headers import DigestHeaderAlgorithm, exceptions
-from starlette.middleware.base import BaseHTTPMiddleware, DispatchFunction
+from rfc3230_digest_headers import DigestHeaderAlgorithm
+from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
-from starlette.types import ASGIApp
 
 
 class Middleware(BaseHTTPMiddleware):
@@ -36,7 +35,7 @@ class Middleware(BaseHTTPMiddleware):
             app: The ASGI application.
             dispatch: Optional custom dispatch function.
             instance_bytes_callback: Optional callback to get the instance bytes from the request. The bytes returned should be the same ones used to initially generate the Digest header.
-            qvalues: Optional dictionary of preferred DigestHeaderAlgorithm and their q-values. If not provided, default q-values will be used that only allow SHA512 and SHA256.
+            qvalues: Optional dictionary of preferred DigestHeaderAlgorithm and their q-values. If not provided, default q-values will be used that only allow SHA-256.
         """
         super().__init__(app, dispatch)
         self.instance_bytes_callback = instance_bytes_callback
@@ -52,24 +51,23 @@ class Middleware(BaseHTTPMiddleware):
         valid, header_should_be_added = DigestHeaderAlgorithm.verify_request(
             request_headers={"Digest": digest_header} if digest_header else {},
             instance=instance_bytes,
-            qvalues=(
-                self.qvalues
-                or {
-                    DigestHeaderAlgorithm.SHA512: None,
-                    DigestHeaderAlgorithm.SHA256: None,
-                    DigestHeaderAlgorithm.SHA: 0.0,
-                    DigestHeaderAlgorithm.MD5: 0.0,
-                    DigestHeaderAlgorithm.UNIXCKSUM: 0.0,
-                    DigestHeaderAlgorithm.UNIXSUM: 0.0,
-                }
-            ),
+            qvalues=self.qvalues,
         )
-        if not valid and header_should_be_added is not None:
+        if header_should_be_added is not None:
             return Response(
-                content=f"Digest header validation failed.",
+                content=(
+                    f"Digest validation failed with: {header_should_be_added.error_description}"
+                    if header_should_be_added.error_description
+                    else "Digest header added."
+                ),
                 status_code=422,
                 headers={
                     header_should_be_added.header_name: header_should_be_added.header_value
                 },
+            )
+        if not valid:
+            return Response(
+                content="Digest validation failed.",
+                status_code=500,
             )
         return await call_next(request)
