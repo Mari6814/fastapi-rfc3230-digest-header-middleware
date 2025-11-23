@@ -29,9 +29,51 @@ async def echo(request: Request):
     return body
 ```
 
-This will require all POST requests to `/echo` to include a valid `Digest` header matching the request body.
+This will require all POST requests to `/echo` to include a valid `Digest`
+header matching the request body.  If the client sends an invalid request, the
+server will respond with a `422 Unprocessable Entity` error and include details
+about the validation failure. The response will also include a `Want-Digest` header
+indicating the accepted digest algorithms.
 
-## Custom Configuration
+## Client side
+
+### Sending requests with Digest Header
+The client must compute the digest of the request body using one of the accepted
+algorithms and include it in the `Digest` header. For example, to compute a
+SHA-256 digest in Python you can use the `rfc3230-digest-headers` package:
+
+```python
+from rfc3230_digest_headers import create_digest
+
+body = b"Hello, World!"
+digest_header = create_digest(body)
+headers = {"Digest": digest_header.header_value}
+```
+
+if you want to manually create the header, you can do it like this:
+
+```python
+import hashlib
+import base64
+body = b"Hello, World!"
+sha256_digest = hashlib.sha256(body).digest()
+digest_value = base64.b64encode(sha256_digest).decode('utf-8')
+digest_header = f"SHA-256={digest_value}"
+headers = {"Digest": digest_header}
+```
+
+### Client side handling of Want-Digest Header
+The client should also be able to handle the `Want-Digest` header in case of a `422` response. The `rfc3230-digest-headers` package can help with parsing this header as well.
+
+```python
+from rfc3230_digest_headers import create_digest
+want_digest_header = response.headers.get("Want-Digest", "")
+
+# The `digest_value` will include the appropriate digests according to the server's Want-Digest header
+digest_header = create_digest(body, want_digest_header)
+```
+
+## Configuration
 
 You can customize which digest algorithms are allowed or provide a custom callback to extract the bytes to validate:
 
