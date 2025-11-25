@@ -8,10 +8,7 @@ version = "0.1.0"
 description = "Implements a middleware that protects FastAPI endpoints with RFC 3230 Digest headers."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = [
-    "fastapi>=0.121.3",
-    "rfc3230-digest-headers>=1.1.2",
-]
+dependencies = ["fastapi>=0.121.3", "rfc3230-digest-headers>=1.1.2"]
 authors = [{ name = "Marian Plivelic", email = "marianplivelic@gmail.com" }]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -24,8 +21,20 @@ classifiers = [
 keywords = ["fastapi", "middleware", "rfc3230", "digest-header"]
 
 [dependency-groups]
-dev = [
-    "httpx>=0.28.1",
-    "pytest>=9.0.1",
-    "ruff>=0.14.5",
+dev = ["httpx>=0.28.1", "pytest>=9.0.1", "ruff>=0.14.5"]
+
+[tool.hatch.metadata]
+license = "MIT"
+repository = "https://github.com/marianplivelic/fastapi-rfc3230-digest-header-middleware"
+homepage = "https://github.com/marianplivelic/fastapi-rfc3230-digest-header-middleware"
+documentation = "https://fastapi-rfc3230-digest-header-middleware.marianplivelic.com/"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "fastapi_rfc3230_digest_header_middleware/**",
+    "LICENSE",
+    "README.md",
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = ["fastapi_rfc3230_digest_header_middleware"]
