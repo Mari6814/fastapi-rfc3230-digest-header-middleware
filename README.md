@@ -35,7 +35,7 @@ async def echo(request: Request):
 
 This will require all POST requests to `/echo` to include a valid `Digest`
 header matching the request body.  If the client sends an invalid request, the
-server will respond with a `422 Unprocessable Entity` error and include details
+server will respond with a `400 Bad Request` error and include details
 about the validation failure. The response will also include a `Want-Digest` header
 indicating the accepted digest algorithms.
 
@@ -67,7 +67,7 @@ headers = {"Digest": digest_header}
 ```
 
 ### Client side handling of Want-Digest Header
-The client should also be able to handle the `Want-Digest` header in case of a `422` response. The `rfc3230-digest-headers` package can help with parsing this header as well.
+The client should also be able to handle the `Want-Digest` header in case of a `400` response. The `rfc3230-digest-headers` package can help with parsing this header as well.
 
 ```python
 from rfc3230_digest_headers import create_digest

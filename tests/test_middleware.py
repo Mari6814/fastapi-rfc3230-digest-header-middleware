@@ -45,7 +45,7 @@ def test_invalid_digest_header(app: FastAPI):
         content=body,
         headers={digest.header_name: digest.header_value + "invalid"},
     )
-    assert response.status_code == 422
+    assert response.status_code == 400
     assert b"No Digest value matched" in response.content
 
 
@@ -53,7 +53,7 @@ def test_missing_digest_header(app: FastAPI):
     client = TestClient(app)
     body = b"hello world"
     response = client.post("/echo", content=body)
-    assert response.status_code == 422
+    assert response.status_code == 400
     assert b"Missing Digest header" in response.content
 
 
@@ -93,7 +93,7 @@ def test_reject_disallowed():
     response = client.post(
         "/echo", content=body, headers={md5_digest.header_name: md5_digest.header_value}
     )
-    assert response.status_code == 422
+    assert response.status_code == 400
     assert b"Algorithm md5 not acceptable. qvalue is 0.0." in response.content
 
     # Send with sha-512, should fail because it is not mentioned
@@ -105,7 +105,7 @@ def test_reject_disallowed():
         content=body,
         headers={sha512_digest.header_name: sha512_digest.header_value},
     )
-    assert response.status_code == 422
+    assert response.status_code == 400
     assert b"No acceptable algorithm provided in Digest header." in response.content
 
 
@@ -149,5 +149,5 @@ def test_instance_bytes_callback_partial_json():
         content=body,
         headers={wrong_digest.header_name: wrong_digest.header_value},
     )
-    assert response.status_code == 422
+    assert response.status_code == 400
     assert b"No Digest value matched" in response.content

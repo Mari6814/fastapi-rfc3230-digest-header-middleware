@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "fastapi-rfc3230-digest-header-middleware"
-version = "1.0.3"
+version = "1.0.4"
 description = "Implements a middleware that protects FastAPI endpoints with RFC 3230 Digest headers."
 readme = "README.md"
 requires-python = ">=3.10"

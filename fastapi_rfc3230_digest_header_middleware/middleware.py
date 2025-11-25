@@ -60,7 +60,7 @@ class Middleware(BaseHTTPMiddleware):
                     if header_should_be_added.error_description
                     else "Digest header added."
                 ),
-                status_code=422,
+                status_code=400,
                 headers={
                     header_should_be_added.header_name: header_should_be_added.header_value
                 },
