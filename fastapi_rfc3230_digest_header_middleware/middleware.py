@@ -65,9 +65,4 @@ class Middleware(BaseHTTPMiddleware):
                     header_should_be_added.header_name: header_should_be_added.header_value
                 },
             )
-        if not valid:
-            return Response(
-                content="Digest validation failed.",
-                status_code=500,
-            )
         return await call_next(request)
