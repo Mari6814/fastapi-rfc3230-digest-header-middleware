@@ -1,3 +1,7 @@
+[![Test](https://github.com/Mari6814/fastapi-rfc3230-digest-header-middleware/actions/workflows/ci.yml/badge.svg)](https://github.com/Mari6814/fastapi-rfc3230-digest-header-middleware/actions/workflows/ci.yml)
+[![Coverage](https://github.com/Mari6814/fastapi-rfc3230-digest-header-middleware/raw/main/badges/coverage.svg)](https://github.com/Mari6814/fastapi-rfc3230-digest-header-middleware/raw/main/badges/coverage.svg)
+[![Versions](https://github.com/Mari6814/fastapi-rfc3230-digest-header-middleware/raw/main/badges/python-versions.svg)](https://github.com/Mari6814/fastapi-rfc3230-digest-header-middleware/raw/main/badges/python-versions.svg)
+
 # FastAPI RFC 3230 Digest Header Middleware
 
 ## Introduction
