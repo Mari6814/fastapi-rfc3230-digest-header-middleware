@@ -4,6 +4,7 @@ from fastapi.testclient import TestClient
 from starlette.responses import Response
 from fastapi_rfc3230_digest_header_middleware.middleware import Middleware
 from rfc3230_digest_headers import DigestHeaderAlgorithm
+import json
 
 
 @pytest.fixture
@@ -106,3 +107,47 @@ def test_reject_disallowed():
     )
     assert response.status_code == 422
     assert b"No acceptable algorithm provided in Digest header." in response.content
+
+
+def test_instance_bytes_callback_partial_json():
+    """
+    Test customizing digest calculation to only include part of a JSON request (e.g., only the 'foo' field).
+    """
+
+    async def only_foo_field_bytes(request: Request) -> bytes:
+        data = await request.json()
+        foo_value = data.get("foo", "")
+        return str(foo_value).encode()
+
+    app = FastAPI()
+    app.add_middleware(Middleware, instance_bytes_callback=only_foo_field_bytes)
+
+    @app.post("/json")
+    async def json_echo(request: Request):
+        body = await request.body()
+        return Response(content=body)
+
+    client = TestClient(app)
+    payload = {"foo": "bar", "baz": 123}
+    body = json.dumps(payload).encode()
+    # Digest only covers the 'foo' field
+    digest = DigestHeaderAlgorithm.make_digest_header(
+        b"bar", algorithms=[DigestHeaderAlgorithm.SHA256]
+    )
+    response = client.post(
+        "/json", content=body, headers={digest.header_name: digest.header_value}
+    )
+    assert response.status_code == 200
+    assert response.content == body
+
+    # Digest covers wrong value (whole body), should fail
+    wrong_digest = DigestHeaderAlgorithm.make_digest_header(
+        body, algorithms=[DigestHeaderAlgorithm.SHA256]
+    )
+    response = client.post(
+        "/json",
+        content=body,
+        headers={wrong_digest.header_name: wrong_digest.header_value},
+    )
+    assert response.status_code == 422
+    assert b"No Digest value matched" in response.content
