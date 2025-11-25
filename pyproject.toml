@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "fastapi-rfc3230-digest-header-middleware"
-version = "1.0.2"
+version = "1.0.3"
 description = "Implements a middleware that protects FastAPI endpoints with RFC 3230 Digest headers."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -19,16 +19,14 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
 ]
 keywords = ["fastapi", "middleware", "rfc3230", "digest-header"]
+license = { file = "LICENSE" }
+
+[project.urls]
+Repository = "https://github.com/Mari6814/fastapi-rfc3230-digest-header-middleware"
+Documentation = "https://github.com/Mari6814/fastapi-rfc3230-digest-header-middleware"
 
 [dependency-groups]
 dev = ["httpx>=0.28.1", "pytest>=9.0.1", "ruff>=0.14.5"]
 
-[tool.hatch.build.targets.sdist]
-include = [
-    "fastapi_rfc3230_digest_header_middleware/**",
-    "LICENSE",
-    "README.md",
-]
-
-[tool.hatch.build.targets.wheel]
+[tool.hatch.build]
 packages = ["fastapi_rfc3230_digest_header_middleware"]
